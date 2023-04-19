@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 
 const Register = () => {
     const { user, createUser } = useContext(AuthContext);
-    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -12,29 +11,40 @@ const Register = () => {
 
     const handleRegister = (event) => {
         event.preventDefault();
-        
+        setError("");
 
         // const form = event.target;
         // const name = form.name.value;
         // const email = form.email.value;
         // const password = form.password.value;
-        console.log(name, email, password);
-        if (/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(password)) {
-            setError("");
+
+        //  Regular expression for javascript validation
+        // (/^                     // start
+        // (?=.*\d)                //should contain at least one digit
+        // (?=.*[a-z])             //should contain at least one lower case
+        // (?=.*[A-Z])             //should contain at least one upper case
+        // [a-zA-Z0-9]{8,}         //should contain at least 8 from the mentioned characters
+        // $/)                     // end
+        // Example:-   /^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{7,}$/
+
+
+        console.log(email, password);
+        if (/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[a-zA-Z!#$%&? "])[a-zA-Z0-9!#$%&?]{6,10}$/.test(password)) {            
             //console.log("okay tikh ace ");
         } else {
             setError("The password you entered isn't correct!");
             return;
         }
         if (email) {
-            createUser(name, email, password)
+            createUser(email, password)
                 .then(result => {
                     const loggedUser = result.user;
                     console.log(loggedUser);
                     form.reset();
                 })
                 .catch(error => {
-                    console.log(error)
+                    //console.log(error)
+                    console.log(">>>> ",error.message)
                 })
         } else {
             setError("The email and password you’ve entered is not correct.");
@@ -50,7 +60,7 @@ const Register = () => {
 
                     <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
                         <div className="card-body">
-                            <div className="form-control">
+                            {/* <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Full name</span>
                                 </label>
@@ -58,7 +68,7 @@ const Register = () => {
                                     onChange={(e) => setName(e.target.value)}
                                     type="text" name='name' placeholder="Full name"
                                     className="input input-bordered" />
-                            </div>
+                            </div> */}
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Email</span>

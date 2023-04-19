@@ -15,6 +15,8 @@ import Shop from './components/Shop';
 import AuthProviders from './AuthProviders/AuthProviders';
 import PrivateRoute from './PrivateRoute/PrivateRoute';
 import Profile from './components/Profile';
+import Checkout from './components/Checkout';
+import PhoneVerify from './components/PhoneVerify';
 
 
 const router = createBrowserRouter([
@@ -31,6 +33,10 @@ const router = createBrowserRouter([
         element: <Login></Login>
       },
       {
+        path: '/phoneverify',
+        element: <PhoneVerify></PhoneVerify>
+      },
+      {
         path: '/register',
         element: <Register></Register>
       },
@@ -40,11 +46,15 @@ const router = createBrowserRouter([
       },
       {
         path: '/shopping',
-        element: <PrivateRoute><Shop></Shop></PrivateRoute>
+        element:<Shop></Shop>
       },
       {
         path: '/orders',
-        element: <PrivateRoute><Orders></Orders></PrivateRoute>
+        element: <Orders></Orders>
+      },
+      {
+        path: '/checkout',
+        element: <PrivateRoute><Checkout></Checkout></PrivateRoute>
       },
       {
         path: '/profile',

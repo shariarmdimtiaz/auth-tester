@@ -1,53 +1,62 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { getAuth, GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, GithubAuthProvider, RecaptchaVerifier } from "firebase/auth";
 import app from '../firebase/firebase.config';
 
 export const AuthContext = createContext(null);
-
 const auth = getAuth(app);
+
 const googleAuthProvider = new GoogleAuthProvider();
+const githubAuthProvider = new GithubAuthProvider();
 
 
-const AuthProviders = ({children}) => {
+const AuthProviders = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const createUser = (name, email, password) =>{
+    const createUser = (email, password) => {
+        setLoading(true);
         return createUserWithEmailAndPassword(auth, email, password);
     }
 
     const signIn = (email, password) => {
+        setLoading(true);
         return signInWithEmailAndPassword(auth, email, password);
     }
 
-    const signInWithGoogle = () =>{
+    const signInWithGoogle = () => {
+        setLoading(true);
         return signInWithPopup(auth, googleAuthProvider);
     }
+    const signInWithGithub = () => {
+        setLoading(true);
+        return signInWithPopup(auth, githubAuthProvider);
+    }
 
-    const logOut = () =>{
+    const logOut = () => {
         return signOut(auth);
     }
 
-    // observe auth state change
-    useEffect( () =>{
+    // observer user auth state 
+    useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, currentUser => {
-            console.log('auth state change', currentUser);
             setUser(currentUser);
             setLoading(false);
         });
 
-        return () =>{
-            unsubscribe();
+        // stop observing while unmounting 
+        return () => {
+            return unsubscribe();
         }
-
     }, [])
 
     const authInfo = {
         user,
         loading,
+        auth,
         createUser,
         signIn,
         signInWithGoogle,
+        signInWithGithub,
         logOut
     }
 
